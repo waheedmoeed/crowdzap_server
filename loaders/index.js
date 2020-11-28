@@ -2,26 +2,24 @@ const initLogger = require("./logger");
 expressLoader = require("./express");
 mongooseLoader = require("./mongoose");
 dependencyInjectorLoader = require("./dependencyInjection")
-initFirebaseAdmin = require("./firebaseAdmin");
 
 loadApp = async (app) => {
   await initLogger(app);
   await mongooseLoader();
-  await initFirebaseAdmin();
 
   //add all the models to Container that are needed in service layer
   let userModel = {
      name: "userModel",
      model: require("../models/user"),
   };
-  let socialPlatformsModel = {
-    name: "social_platforms",
-    model: require("../models/socialplatforms")
-  }
+  let kycModel = {
+    name: "kycModel",
+    model: require("../models/kyc"),
+ };
   await dependencyInjectorLoader({
     models: [
       userModel,
-      socialPlatformsModel
+      kycModel
     ],
   });
 

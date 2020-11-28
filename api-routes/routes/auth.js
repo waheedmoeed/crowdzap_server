@@ -20,7 +20,7 @@ const router = new express.Router();
 // }
 // )
 
-const {googleController, facebookController, loginUserController, registerUserController} = require("../../controllers/auth/users");
+const {googleController, facebookController, loginUserController, registerUserController, kycController} = require("../../controllers/auth/users");
 
 module.exports = (app)=> {
     app.use("/user",router)
@@ -48,7 +48,17 @@ module.exports = (app)=> {
 
     router.post("/google-login", googleController);
     router.post("/facebook-login", facebookController);
-
-    router.get("/refresh-firebase", getWithAuth, refreshFirebaseToken)
+    router.post(
+        "/kyc", getWithAuth,
+        celebrate({
+                body: Joi.object({
+                    docType : Joi.string().required(),
+                    doc : Joi.string().required(),
+                    number : Joi.number().required(),
+                    expiry : Joi.string().required(),
+                    addressProof : Joi.string().required()
+            }),
+        }),
+        kycController)
 }
     //module.exports = router;

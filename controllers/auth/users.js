@@ -36,7 +36,7 @@ exports.loginUserController = async (req, res) => {
     try{
         const userService = Container.get("UserService")
         const response = await userService.Login(email, password)
-        return res.status(201).json({ user: response.user, token : response.token, firebaseToken: response.firebaseToken });
+        return res.status(200).json({ user: response.user, token : response.token});
     }catch (e) {
         logger.error('🔥 error: '+ e);
         //return next(e);
@@ -164,16 +164,24 @@ exports.facebookController = (req, res) => {
     );
 };
 
-exports.refreshFirebaseToken = async (req, res)=>{
-    try {
+exports.kycController = async (req, res) => {
+    let kycObj = {
+        docType : req.body.docType,
+        doc : req.body.doc,
+        number : req.body.number,
+        expiry : req.body.expiry,
+        addressProof : req.body.addressProof,
+        userId : req.userId
+    }
+    try{
         const userService = Container.get("UserService")
-        const token = await userService.GenerateFirebaseToken(req.userId)
-        return res.status(200).json({firebaseToken: token });
-    }catch (e) {
-        logger.error('🔥 error: ' + e);
+        await userService.StoreKyc(kycObj)
+        return res.status(200).json({status: "ok"});
+    }catch(e){
+        logger.error('🔥 error: '+ e);
         //return next(e);
         return res.status(400).json({
-            error: "Failed to refresh firebase token",
+            error: "Kyc processing failed with Local API",
         });
     }
 }

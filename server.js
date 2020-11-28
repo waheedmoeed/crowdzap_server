@@ -1,8 +1,6 @@
 /* eslint-disable max-len */
 config = require("./config");
 express = require("express");
-
-
 /**
  * Starts Express Server
 **/

@@ -6,8 +6,10 @@ const bcrypt = require("bcrypt")
 const admin = require("firebase-admin")
 module.exports = class UserService{
     userModal
+    kycModal
     constructor() {
         this.userModal = Container.get("userModel")
+        this.kycModal = Container.get("kycModel")
     }
 
     async Register(userObj){
@@ -24,7 +26,12 @@ module.exports = class UserService{
                         newUser.password = hash;
                         const user = await this.userModal.create(newUser)
                         if(!user) throw new Error("Fail to create new user")
-                        return user
+                        let userObject = user.toObject()
+                        Reflect.deleteProperty(userObject, 'createdAt');
+                        Reflect.deleteProperty(userObject, 'password');
+                        Reflect.deleteProperty(userObject, 'updatedAt');
+                        Reflect.deleteProperty(userObject, '__v');
+                        return userObject
                     }else{
                         throw new Error("Hash error occur")
                     }
@@ -40,19 +47,31 @@ module.exports = class UserService{
             throw new Error("User not registered")
         }else{
             let compare = await bcrypt.compare(password, user.password)
+            console.log(compare)
             if (compare){
                 let token = await this.generateJwt(user)
-                let firebaseToken = await this.GenerateFirebaseToken(user._id)
                 if (!token) throw new Error("Failed to generate token")
                 let userObject = user.toObject()
                 Reflect.deleteProperty(userObject, 'createdAt');
                 Reflect.deleteProperty(userObject, 'password');
                 Reflect.deleteProperty(userObject, 'updatedAt');
                 Reflect.deleteProperty(userObject, '__v');
-                return {user:userObject, token:token, firebaseToken: firebaseToken}
+                return {user:userObject, token:token}
             }else{
                 throw new Error("Password mismatch")
             }
+        }
+    }
+
+    async StoreKyc(kycObj){
+        const kycDoc = await this.kycModal.findOne({userId: kycObj.userId})
+        if (kycDoc) {
+            throw new Error("KYC doc already stored")
+        } else {
+            const newKycDoc = new this.kycModal(kycObj);       
+            const kycDoc = await this.kycModal.create(newKycDoc)
+            if(!kycDoc) throw new Error("Fail to store KYC doc")
+            return 
         }
     }
 
@@ -66,12 +85,5 @@ module.exports = class UserService{
             {expiresIn: "7d",
             }
         )
-    }
-
-    //generate JWT custom token for client app interacting
-    //with firebase and validity of this token is 3600 sec.
-    async GenerateFirebaseToken(userId){
-        let token =  await admin.auth().createCustomToken(userId.toString())
-        return token
     }
 }
