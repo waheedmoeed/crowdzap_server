@@ -10,7 +10,7 @@ getWithAuth = function(req, res, next){
     if(token){
         jwt.verify(req.headers.authorization.split(' ')[1], mySecret, function(error, decoded){
             if(error){
-                res.statusCode = 200
+                res.statusCode = 401
                 res.json({"error":{"Unauthorization": "Token is not valid"}})
             }else{
                 req.userId = decoded._id
@@ -18,7 +18,7 @@ getWithAuth = function(req, res, next){
             }
         })
     }else{
-        res.statusCode=200
+        res.statusCode=401
         res.json({"error":{"Unauthorization": "Token is not available"}})
     }
 }

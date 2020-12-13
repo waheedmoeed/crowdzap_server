@@ -2,10 +2,12 @@ const bodyParser = require("body-parser");
 routes = require("../api-routes");
 cors = require("cors");
 passport = require("passport");
+const { errors, isCelebrateError} = require('celebrate');
 
 module.exports = (app) => {
   // Passport middleware
   app.use(passport.initialize());
+  app.use(errors())
 
   // Passport config
   require("../config/passport")(passport);
@@ -27,19 +29,28 @@ module.exports = (app) => {
   // Load API routes
   app.use(config.api.prefix, routes());
 
+  //JOI Celebrate error Handler
+app.use((error, req, res, next) => {
+  if (isCelebrateError(error) ) {
+    console.log(error)
+    return res.status(400).json({error: error});
+  }
+  return res.status(500).send(error)
+});
+
   // / catch 404 and forward to error handler
-  // app.use((req, res, next) => {
-  //   const err = new Error("Not Found");
-  //   err["status"] = 404;
-  //   next(err);
-  // });
+  /*
+app.use((req, res, next) => {
+   const err = new Error("Not Found");
+   err["status"] = 404;
+   next(err);
+});
+
+
 
 
   // / error handlers
-  app.use((err, req, res, next) => {
-    /**
-       * Handle 401 thrown by express-jwt library
-       */
+app.use((err, req, res, next) => {
     if (err.name === "UnauthorizedError") {
       return res
           .status(err.status)
@@ -48,13 +59,14 @@ module.exports = (app) => {
     }
     return next(err);
   });
-  // app.use((err, req, res, next) => {
-  //   res.status(err.status || 500);
-  //   res.json({
-  //     errors: {
-  //       message: err.message,
-  //     },
-  //   });
-  // });
+app.use((err, req, res, next) => {
+   res.status(err.status || 500);
+   res.json({
+     errors: {
+     message: err.message,
+     },
+   });
+ });
+ */
 };
 

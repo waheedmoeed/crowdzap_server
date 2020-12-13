@@ -1,3 +1,4 @@
+const cryptoOrder = require("../api-routes/routes/cryptoOrder");
 const initLogger = require("./logger");
 expressLoader = require("./express");
 mongooseLoader = require("./mongoose");
@@ -15,11 +16,21 @@ loadApp = async (app) => {
   let kycModel = {
     name: "kycModel",
     model: require("../models/kyc"),
- };
+  };
+  let listedPropModel = {
+    name: "listedPropModel",
+    model: require("../models/listedProp"),
+  };
+  let cryptoOrderModel = {
+    name: "cryptoOrderModel",
+    model: require("../models/cryptoOrder"),
+  };
   await dependencyInjectorLoader({
     models: [
       userModel,
-      kycModel
+      kycModel,
+      listedPropModel,
+      cryptoOrderModel
     ],
   });
 

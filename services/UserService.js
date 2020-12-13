@@ -3,7 +3,6 @@ const {Container} = require("typedi")
 const dotenv = require("dotenv");
 dotenv.config();
 const bcrypt = require("bcrypt")
-const admin = require("firebase-admin")
 module.exports = class UserService{
     userModal
     kycModal
@@ -66,12 +65,12 @@ module.exports = class UserService{
     async StoreKyc(kycObj){
         const kycDoc = await this.kycModal.findOne({userId: kycObj.userId})
         if (kycDoc) {
-            throw new Error("KYC doc already stored")
+            return false
         } else {
             const newKycDoc = new this.kycModal(kycObj);       
             const kycDoc = await this.kycModal.create(newKycDoc)
             if(!kycDoc) throw new Error("Fail to store KYC doc")
-            return 
+            return true
         }
     }
 

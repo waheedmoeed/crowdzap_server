@@ -165,18 +165,13 @@ exports.facebookController = (req, res) => {
 };
 
 exports.kycController = async (req, res) => {
-    let kycObj = {
-        docType : req.body.docType,
-        doc : req.body.doc,
-        number : req.body.number,
-        expiry : req.body.expiry,
-        addressProof : req.body.addressProof,
-        userId : req.userId
-    }
+    let kycObj = {...req.body}
+    kycObj['userId'] = req.userId;
     try{
         const userService = Container.get("UserService")
-        await userService.StoreKyc(kycObj)
-        return res.status(200).json({status: "ok"});
+        let response = await userService.StoreKyc(kycObj)
+        if (response) return res.status(200).json({status: "ok"});
+        return res.status(201).json({status: "Already KYC Process done"})
     }catch(e){
         logger.error('🔥 error: '+ e);
         //return next(e);
