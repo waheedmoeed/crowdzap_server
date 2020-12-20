@@ -20,7 +20,15 @@ const router = new express.Router();
 // }
 // )
 
-const {googleController, facebookController, loginUserController, registerUserController, kycController} = require("../../controllers/auth/users");
+const {
+    googleController,
+    facebookController,
+    loginUserController,
+    registerUserController,
+    kycController,
+    addKeyController,
+    getKeyController
+} = require("../../controllers/auth/users");
 
 module.exports = (app)=> {
     app.use("/user",router)
@@ -60,5 +68,18 @@ module.exports = (app)=> {
             }),
         }),
         kycController)
+
+        router.post(
+            "/add_key", getWithAuth,
+            celebrate({
+                    body: Joi.object({
+                        keyTag : Joi.string().required(),
+                        address : Joi.string().required(),
+                }),
+            }),
+            addKeyController)
+
+            router.get(
+                "/get_keys", getWithAuth, getKeyController)
 }
     //module.exports = router;

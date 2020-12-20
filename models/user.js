@@ -27,6 +27,17 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  keys:{
+      type:[{
+        keyTag: {
+        type: String
+      },
+      address:{
+        type: String
+      }
+    }
+    ]
+  }
 },
 {
   timestamps: true,

@@ -180,3 +180,36 @@ exports.kycController = async (req, res) => {
         });
     }
 }
+
+exports.addKeyController = async (req, res) => {
+    let keyObj = {...req.body}
+    let userId = req.userId;
+    try{
+        const userService = Container.get("UserService")
+        let response = await userService.AddKey(keyObj, userId)
+        if (response) return res.status(200).json({status: "ok"});
+        return res.status(201).json({status: "Failed to add key"})
+    }catch(e){
+        logger.error('🔥 error: '+ e);
+        //return next(e);
+        return res.status(400).json({
+            error: "Add new key failed with Local API",
+        });
+    }
+}
+
+exports.getKeyController = async (req, res) => {
+    let userId = req.userId;
+    try{
+        const userService = Container.get("UserService")
+        let response = await userService.GetKeys(userId)
+        if (response) return res.status(200).json({data: response});
+        return res.status(202).json({data: "No keys founded"})
+    }catch(e){
+        logger.error('🔥 error: '+ e);
+        //return next(e);
+        return res.status(400).json({
+            error: "Keys get failed with Local API",
+        });
+    }
+}

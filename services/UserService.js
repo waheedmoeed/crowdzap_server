@@ -74,6 +74,29 @@ module.exports = class UserService{
         }
     }
 
+    async AddKey(keyObj, userId){
+        const userDoc = await this.userModal.findOneAndUpdate(
+            {_id: userId},
+            {
+                "$push": {
+                    "keys": keyObj
+                }
+            },
+            { new: true, upsert: false }    
+            )
+        if (userDoc) return true
+        return false        
+    }
+
+    async GetKeys(userId){
+        const userDoc = await this.userModal.findOne({_id: userId})
+        if (userDoc) {
+            let userObject = userDoc.toObject()
+            return userObject.keys
+        }
+        return null        
+    }
+
     generateJwt(payload){
         return jwt.sign({
             _id: payload._id,
