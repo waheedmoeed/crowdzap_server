@@ -48,14 +48,22 @@ module.exports = class UserService{
             let compare = await bcrypt.compare(password, user.password)
             console.log(compare)
             if (compare){
-                let token = await this.generateJwt(user)
+                let kycStatus = ""
+                let kyc = await this.kycModal.findOne({userId:user._id})
+                if(kyc){
+                    kycStatus = kyc.status
+                }
+                console.log(kyc)
+                let token = await this.generateJwt(user, kycStatus)
                 if (!token) throw new Error("Failed to generate token")
                 let userObject = user.toObject()
                 Reflect.deleteProperty(userObject, 'createdAt');
                 Reflect.deleteProperty(userObject, 'password');
                 Reflect.deleteProperty(userObject, 'updatedAt');
                 Reflect.deleteProperty(userObject, '__v');
-                return {user:userObject, token:token}
+
+                //get kys status
+                return {user:userObject,token:token}
             }else{
                 throw new Error("Password mismatch")
             }
@@ -97,11 +105,14 @@ module.exports = class UserService{
         return null        
     }
 
-    generateJwt(payload){
+    generateJwt(payload, kycStatus){
         return jwt.sign({
             _id: payload._id,
             name: payload.name,
-            email: payload.email
+            email: payload.email,
+            kycStatus: kycStatus,
+            role: payload.role,
+            profileImg:payload.profileImg,
         },
             process.env.JWT_SECRET,
             {expiresIn: "7d",

@@ -1,7 +1,8 @@
 const express = require("express");
-let auth = require("./routes/auth");
-let listedProp = require("./routes/listedProp")
+const auth = require("./routes/auth");
+const listedProp = require("./routes/listedProp")
 const cryptoOrder = require("./routes/cryptoOrder");
+const investment = require("./routes/investment")
 
 
 module.exports =   ()=>{
@@ -9,5 +10,6 @@ module.exports =   ()=>{
     auth(app);
     listedProp(app);
     cryptoOrder(app)
+    investment(app);
     return app  
 }

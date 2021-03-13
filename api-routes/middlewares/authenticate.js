@@ -14,6 +14,7 @@ getWithAuth = function(req, res, next){
                 res.json({"error":{"Unauthorization": "Token is not valid"}})
             }else{
                 req.userId = decoded._id
+                req.userRole = decoded.role
                 next()
             }
         })

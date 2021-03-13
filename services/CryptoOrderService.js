@@ -8,7 +8,7 @@ module.exports = class CryptoOrderService{
 
     //create new listedprop in DB
     async CreateCryptoOrder(cryptoOrderObj){
-        const cryptoOrderDoc = await this.cryptoOrderModel.findOne({userId: cryptoOrderObj.userId})
+        const cryptoOrderDoc = await this.cryptoOrderModel.findOne({userId: cryptoOrderObj.userId, processed: 1})
         if (cryptoOrderDoc) {
             return false
         } else {
@@ -20,7 +20,9 @@ module.exports = class CryptoOrderService{
     }
 
     async ProcessCryptoOrder(cryptoOrderObj){
-        const cryptoOrderDoc = await this.cryptoOrderModel.findOneAndUpdate({userId: cryptoOrderObj.userId}, {processed:true})
+        const cryptoOrderDoc = await this.cryptoOrderModel.findOneAndUpdate(
+            {_id: cryptoOrderObj.orderId},
+            {processed:0, transactionId: cryptoOrderObj.transactionId})
         if (cryptoOrderDoc) {
             return true
         }    

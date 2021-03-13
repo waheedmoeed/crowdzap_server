@@ -18,7 +18,7 @@ module.exports = (app)=> {
                 amount: Joi.number().required(),
                 nodeName: Joi.string().required(),
                 fiatCurrencyTranId:Joi.string().required(),
-                transactionId: Joi.string().required(),
+                cryptoType: Joi.string().required(),
             })
         }),
         createCryptoOrderController);
@@ -27,7 +27,8 @@ module.exports = (app)=> {
             getWithAuth,
             celebrate({
                 body: Joi.object({
-                    orderId: Joi.string().required()
+                    orderId: Joi.string().required(),
+                    transactionId: Joi.string().required()
                 })
             }),
             processCryptoOrderController);

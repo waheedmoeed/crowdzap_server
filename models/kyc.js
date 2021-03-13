@@ -27,12 +27,17 @@ const KycSchema = new Schema({
   },
   userId:{
       type: String,
-      required : true
+      required : true,
+    unique: true
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  status:{
+   type:String,
+    default:"submitted"
+  }
 },
 {
   timestamps: true,
