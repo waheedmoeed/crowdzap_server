@@ -75,6 +75,7 @@ module.exports = (app)=> {
                     body: Joi.object({
                         keyTag : Joi.string().required(),
                         address : Joi.string().required(),
+                        index : Joi.number().required()
                 }),
             }),
             addKeyController)

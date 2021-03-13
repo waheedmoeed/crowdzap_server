@@ -38,6 +38,5 @@ module.exports = (app)=> {
         
     router.get(
         "/get_listed_props",
-        getWithAuth,
         getListedPropsController);
 }

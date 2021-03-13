@@ -19,7 +19,8 @@ exports.registerUserController = async (req, res) => {
     try{
         const userService = Container.get("UserService")
         let user = await userService.Register(userObj)
-            return res.status(201).json({user});
+        if(user) return res.status(200).json({user});
+        return res.status(204).json({error : "Failed to register user"});
     }catch(e){
         logger.error('🔥 error: '+ e);
         //return next(e);
@@ -36,7 +37,8 @@ exports.loginUserController = async (req, res) => {
     try{
         const userService = Container.get("UserService")
         const response = await userService.Login(email, password)
-        return res.status(200).json({ user: response.user, token : response.token});
+        if (response) return res.status(200).json({ user: response.user, token : response.token});
+        return  res.status(204).json({error: "User not founded"});
     }catch (e) {
         logger.error('🔥 error: '+ e);
         //return next(e);

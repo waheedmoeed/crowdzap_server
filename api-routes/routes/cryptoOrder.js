@@ -17,8 +17,8 @@ module.exports = (app)=> {
                 clientAddress: Joi.string().required(),
                 amount: Joi.number().required(),
                 nodeName: Joi.string().required(),
-                fiatCurrencyTranId:Joi.string().required(),
-                transactionId: Joi.string().required(),
+                cryptoTranHash:Joi.string().required(),
+                cryptoType: Joi.string().required(),
             })
         }),
         createCryptoOrderController);

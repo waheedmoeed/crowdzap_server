@@ -29,7 +29,7 @@ exports.processCryptoOrderController = async (req, res) => {
         const cryptoOrderService = Container.get("CryptoOrderService")
         let response = await cryptoOrderService.ProcessCryptoOrder(cryptoOrderObj)
         if (response) return res.status(200).json({status: "ok"});
-        return res.status(201).json({status: "Fail to place crypto buy order, because already another order placed for you"})
+        return res.status(204).json({status: "Fail to place crypto buy order, because already another order placed for you"})
     }catch(e){
         logger.error('🔥 error: '+ e);
         //return next(e);

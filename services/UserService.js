@@ -101,7 +101,7 @@ module.exports = class UserService{
         return jwt.sign({
             _id: payload._id,
             name: payload.name,
-            email: payload.email
+            email: payload.email,
         },
             process.env.JWT_SECRET,
             {expiresIn: "7d",
