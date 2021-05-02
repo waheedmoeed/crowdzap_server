@@ -21,8 +21,8 @@ module.exports = class ListedPropService{
 
     async GetListedProps(filterCond){
         let listedPropDocs;
-        if(filterCond){
-            listedPropDocs = await this.listedpropsModel.filterByCondition(filterCond)
+        if(filterCond.city){
+            listedPropDocs = await this.listedpropsModel.filterByCity(filterCond)
             
         }else {
             listedPropDocs = await this.listedpropsModel.find()

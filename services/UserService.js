@@ -46,7 +46,6 @@ module.exports = class UserService{
             throw new Error("User not registered")
         }else{
             let compare = await bcrypt.compare(password, user.password)
-            console.log(compare)
             if (compare){
                 let token = await this.generateJwt(user)
                 if (!token) throw new Error("Failed to generate token")
@@ -102,6 +101,7 @@ module.exports = class UserService{
             _id: payload._id,
             name: payload.name,
             email: payload.email,
+            kycStatus: payload.kycStatus
         },
             process.env.JWT_SECRET,
             {expiresIn: "7d",

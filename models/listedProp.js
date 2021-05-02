@@ -79,9 +79,9 @@ const ListedProps = new Schema({
 );
 
 //Filter By any given condition
-ListedProps.statics.filterByCondition= function(filterByCondition){
+ListedProps.statics.filterByCity= function(filter){
   return new Promise((resolve, reject) => {
-    ListedPropsModel.find(filterByCondition, (err, data)=>{
+    ListedPropsModel.find({'location.city':{'$regex': filter.city,$options:'i'}}, (err, data)=>{
       if (err) return reject(err)
       resolve(data)
     })
