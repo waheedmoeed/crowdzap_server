@@ -72,10 +72,10 @@ module.exports = (app)=> {
         router.post(
             "/add_key", getWithAuth,
             celebrate({
-                    body: Joi.object({
-                        keyTag : Joi.string().required(),
-                        address : Joi.string().required(),
-                        index : Joi.number().required()
+                body: Joi.object({
+                    keyTag : Joi.string().required(),
+                    index : Joi.number().required(),
+                    address : Joi.string().required(),
                 }),
             }),
             addKeyController)

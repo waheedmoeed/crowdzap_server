@@ -30,13 +30,16 @@ const CryptoOrderSchema = new Schema({
         type: mongoose.Types.ObjectId,
         required: true,
     },
+    cryptoType:{
+        type:String,
+        required: true
+    },
 	transactionId:{
         type: String,
-        default: ""
     },
     processed:{
         type: Number,
-        default: 1 //0 for ok, 1 for processing and 2 for cancel
+        default: 1
     }
 },
 {

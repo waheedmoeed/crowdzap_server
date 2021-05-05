@@ -14,6 +14,9 @@ const UserSchema = new Schema({
     unique: true,
     lowercase: true,
   },
+  profileImg:{
+    type: String,
+  },
   password: {
     type: String,
     required: true,
@@ -28,19 +31,27 @@ const UserSchema = new Schema({
     default: Date.now,
   },
   keys:{
-      type:[{
-        keyTag: {
-        type: String
-      },
-      address:{
-        type: String
-      },
-      index:{
-          type: Number
+      type:[
+        {
+          keyTag: {
+          type: String
+        },
+        address:{
+          type: String
+          }
+        },
+        {
+          type:Number
+        }
+    ]
+  },
+  investments:[
+      {
+        transactionHash:"",
+        tokens:"",
+        contractAddress:""
       }
-    }],
-      default: []
-  }
+  ]
 },
 {
   timestamps: true,
