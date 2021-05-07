@@ -1,7 +1,6 @@
 const {celebrate, Joi} =require("celebrate")
 
 const express = require("express");
-const {refreshFirebaseToken} = require("../../controllers/auth/users");
 const {getWithAuth} = require("../middlewares")
 // const passport = require('passport')
 const router = new express.Router();
@@ -27,7 +26,8 @@ const {
     registerUserController,
     kycController,
     addKeyController,
-    getKeyController
+    getKeyController,
+    
 } = require("../../controllers/auth/users");
 
 module.exports = (app)=> {

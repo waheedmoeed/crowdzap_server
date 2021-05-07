@@ -23,4 +23,10 @@ module.exports = class InvestmentsService {
             return false
         }
     }
+
+    async ResetInvestment(){
+        const err = await this.investmentModal.deleteMany({})
+        if(err) return null
+        return {}
+    }
 }

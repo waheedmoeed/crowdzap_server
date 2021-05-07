@@ -25,3 +25,19 @@ exports.addNewInvestmentController = async (req, res) => {
         });
     }
 }
+
+
+exports.restInvestment = async (req, res) => {
+    try{
+        const userService = Container.get("UserService")
+        let response = await userService.ResetInvestment(kycObj)
+        if (response) return res.status(200).json({status: "ok"});
+        return res.status(201).json({status: "Already KYC Process done"})
+    }catch(e){
+        logger.error('🔥 error: '+ e);
+        //return next(e);
+        return res.status(400).json({
+            error: "Kyc processing failed with Local API",
+        });
+    }
+}

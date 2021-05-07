@@ -23,7 +23,7 @@ module.exports = (app)=> {
                     lat: Joi.number().max(900000000).required(),
                     long: Joi.number().max(900000000).required()
                 }),
-                description: Joi.string().required(),
+                detail: Joi.string().required(),
                 endDate: Joi.date().required(),
                 officialDocs:Joi.string().required(),
                 mainImg:Joi.string().required(),
@@ -33,7 +33,7 @@ module.exports = (app)=> {
                 contractAddress: Joi.string().required(), 
                 contractType: Joi.string().required(),
                 totalSupply: Joi.number().max(900000000).required(),
-                tokenPrice: Joi.number().max(900000000).required()
+                tokenPrice: Joi.number().max(900000000).required(),
             })
         }),
         createlistedPropsController);

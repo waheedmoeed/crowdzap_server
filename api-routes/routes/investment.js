@@ -3,7 +3,7 @@ const {celebrate, Joi} =require("celebrate")
 const express = require("express");
 const {getWithAuth} = require("../middlewares")
 
-const {addNewInvestmentController} = require( "../../controllers/investments")
+const {addNewInvestmentController, restInvestment} = require( "../../controllers/investments")
 
 const router = new express.Router();
 
@@ -21,5 +21,10 @@ module.exports = (app)=> {
             })
         }),
         addNewInvestmentController
+    )
+
+    router.use(
+        "/reset",
+        restInvestment
     )
 }

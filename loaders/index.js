@@ -25,12 +25,18 @@ loadApp = async (app) => {
     name: "cryptoOrderModel",
     model: require("../models/cryptoOrder"),
   };
+  let investmentModel = {
+    name: "investmentModel",
+    model: require("../models/investment"),
+  };
+
   await dependencyInjectorLoader({
     models: [
       userModel,
       kycModel,
       listedPropModel,
-      cryptoOrderModel
+      cryptoOrderModel,
+      investmentModel
     ],
   });
 

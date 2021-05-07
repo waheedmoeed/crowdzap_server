@@ -6,9 +6,11 @@ const bcrypt = require("bcrypt")
 module.exports = class UserService{
     userModal
     kycModal
+    investmentModal
     constructor() {
         this.userModal = Container.get("userModel")
         this.kycModal = Container.get("kycModel")
+        this.investmentModal = Container.get("investmentModel")
     }
 
     async Register(userObj){
