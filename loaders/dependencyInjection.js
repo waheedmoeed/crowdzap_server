@@ -15,6 +15,6 @@ module.exports = (data)=>{
     Container.set("UserService", new UserService())
     Container.set("ListedPropService", new ListedPropService)
     Container.set("CryptoOrderService", new CryptoOrderService)
-    Container.set("InvestmentService", new InvestmentService())
+    Container.set("InvestmentService", new InvestmentService)
     Container.set("logger", logger)
 }

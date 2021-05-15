@@ -9,6 +9,10 @@ const InvestmentSchema = new Schema({
   },
   amount: {
     type: Number,
+    required: true,
+  },
+  transactionHash: {
+    type: String,
     trim: true,
     required: true,
     unique: true,
@@ -20,7 +24,6 @@ const InvestmentSchema = new Schema({
   userId:{
       type: String,
       required : true,
-    unique: true
   },
   createdAt: {
     type: Date,

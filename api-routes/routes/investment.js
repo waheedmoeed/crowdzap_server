@@ -3,7 +3,7 @@ const {celebrate, Joi} =require("celebrate")
 const express = require("express");
 const {getWithAuth} = require("../middlewares")
 
-const {addNewInvestmentController, restInvestment} = require( "../../controllers/investments")
+const {addNewInvestmentController, resetInvestment} = require( "../../controllers/investments")
 
 const router = new express.Router();
 
@@ -16,15 +16,16 @@ module.exports = (app)=> {
         celebrate({
             body: Joi.object({
                 contractAddress: Joi.string().required(),
-                tokens: Joi.number().required(),
+                amount: Joi.number().required(),
                 transactionHash: Joi.string().required(),
+                contractType:  Joi.string().required(),
             })
         }),
         addNewInvestmentController
     )
 
-    router.use(
+    router.get(
         "/reset",
-        restInvestment
+        resetInvestment
     )
 }
