@@ -183,6 +183,22 @@ exports.kycController = async (req, res) => {
     }
 }
 
+exports.processKYCRequestController = async (req, res) => {
+    let data = {...req.body}
+    try{
+        const userService = Container.get("UserService")
+        let response = await userService.ProcessKYCRequest(data)
+        if (response) return res.status(200).json({status: "ok"});
+        return res.status(201).json({status: "Already KYC Process done"})
+    }catch(e){
+        logger.error('🔥 error: '+ e);
+        //return next(e);
+        return res.status(400).json({
+            error: "Kyc processing failed with Local API",
+        });
+    }
+}
+
 exports.addKeyController = async (req, res) => {
     let keyObj = {...req.body}
     let userId = req.userId;
@@ -196,6 +212,23 @@ exports.addKeyController = async (req, res) => {
         //return next(e);
         return res.status(400).json({
             error: "Add new key failed with Local API",
+        });
+    }
+}
+
+exports.addContactController = async (req, res) => {
+    let contactObj = {...req.body}
+    let userId = req.userId;
+    try{
+        const userService = Container.get("UserService")
+        let response = await userService.AddContact(contactObj, userId)
+        if (response) return res.status(200).json({status: "ok"});
+        return res.status(201).json({status: "Failed to add contact"})
+    }catch(e){
+        logger.error('🔥 error: '+ e);
+        //return next(e);
+        return res.status(400).json({
+            error: "Add new contact failed with Local API",
         });
     }
 }
@@ -214,4 +247,64 @@ exports.getKeyController = async (req, res) => {
             error: "Keys get failed with Local API",
         });
     }
+}
+
+
+exports.getContactsController = async (req, res) => {
+    let userId = req.userId;
+    try{
+        const userService = Container.get("UserService")
+        let response = await userService.GetContacts(userId)
+        if (response) return res.status(200).json({data: response});
+        return res.status(202).json({data: "No contacts founded"})
+    }catch(e){
+        logger.error('🔥 error: '+ e);
+        //return next(e);
+        return res.status(400).json({
+            error: "Contacts get failed with Local API",
+        });
+    }
+}
+
+
+exports.getKYCController = async (req, res) => {
+    try{
+        const userService = Container.get("UserService")
+        let response = await userService.GetAllKYC()
+        if (response) return res.status(200).json({data: response});
+        return res.status(202).json({data: "No kyc requests founded"})
+    }catch(e){
+        logger.error('🔥 error: '+ e);
+        //return next(e);
+        return res.status(400).json({
+            error: "KYC request get failed with Local API",
+        });
+    }
+}
+
+
+
+const stripe = require('stripe')('sk_test_51IwQaNKmrrRYg5QDKGZEqVhzGeYyYHVp1lHaH7aDT9FCujpG0ocVnmaU5wO3hvB1xVBB6PbqDiIgAPUzjbisJUPg00u0Zv14NH')
+exports.getStripeToken = async (req, res) => {
+    let amount = Number.parseFloat(req.query.amount)* 100
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'CrowdZap',
+            },
+            unit_amount: amount,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: 'http://localhost:3000/wallet',
+      cancel_url: 'http://localhost:3000/wallet',
+    });
+  
+    res.json({ id: session.id });
 }

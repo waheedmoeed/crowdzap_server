@@ -13,6 +13,9 @@ const KycSchema = new Schema({
     required: true,
     unique: true,
   },
+  name:{
+    type: String,
+  },
   expiry: {
     type: String,
     required: true,
@@ -36,7 +39,7 @@ const KycSchema = new Schema({
   },
   status:{
    type:String,
-    default:"submitted"
+    default:"pending"
   }
 },
 {

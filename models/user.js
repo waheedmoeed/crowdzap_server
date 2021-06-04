@@ -51,7 +51,30 @@ const UserSchema = new Schema({
         tokens:"",
         contractAddress:""
       }
-  ]
+  ],
+  contacts:{
+    type:[
+      {
+        name: {
+          type: String
+        },
+        email:{
+          type: String,
+          required:true,
+        },
+        address:{
+          type: String,
+          required:true,
+        },
+        contactId:{
+          type: mongoose.Types.ObjectId,
+        },
+        userId:{
+          type: mongoose.Types.ObjectId,
+        }
+      }
+    ]
+  }
 },
 {
   timestamps: true,

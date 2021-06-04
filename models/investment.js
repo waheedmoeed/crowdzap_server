@@ -21,8 +21,20 @@ const InvestmentSchema = new Schema({
     type: String,
     required: true,
   },
+  senderName:{
+    type: String,
+    default:"Self"
+  },
+  senderAddress:{
+    type: String,
+    default:"----"
+  },
+  investmentType:{
+    type:String,
+    default:"invested"
+  },
   userId:{
-      type: String,
+      type:  mongoose.Types.ObjectId,
       required : true,
   },
   createdAt: {

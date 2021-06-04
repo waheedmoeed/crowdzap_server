@@ -54,7 +54,6 @@ module.exports = class UserService{
                 if(kyc){
                     kycStatus = kyc.status
                 }
-                console.log(kyc)
                 let token = await this.generateJwt(user, kycStatus)
                 if (!token) throw new Error("Failed to generate token")
                 let userObject = user.toObject()
@@ -83,6 +82,17 @@ module.exports = class UserService{
         }
     }
 
+    async ProcessKYCRequest(data){
+        const requestDoc = await this.kycModal.findOneAndUpdate(
+            {_id: data.requestId},
+            {
+                status: data.status
+            } 
+            )
+        if (requestDoc) return true
+        return false        
+    }
+
     async AddKey(keyObj, userId){
         const userDoc = await this.userModal.findOneAndUpdate(
             {_id: userId},
@@ -97,11 +107,46 @@ module.exports = class UserService{
         return false        
     }
 
+
+
+    async AddContact(contactObj, userId){
+        let contactUser = await this.userModal.findOne({email: contactObj.email})
+        if(contactUser){
+            contactObj["contactId"] = contactUser._id
+            const userDoc = await this.userModal.findOneAndUpdate(
+                {_id: userId},
+                {
+                    "$push": {
+                        "contacts": contactObj
+                    }
+                },
+                { new: true, upsert: false }    
+                )
+            if (userDoc) return true
+            return false
+        }  
+        return false        
+    }
+
+    async GetAllKYC(){
+        const kycDocs = await this.kycModal.find({})
+        return kycDocs        
+    }
+
     async GetKeys(userId){
         const userDoc = await this.userModal.findOne({_id: userId})
         if (userDoc) {
             let userObject = userDoc.toObject()
             return userObject.keys
+        }
+        return null        
+    }
+
+    async GetContacts(userId){
+        const userDoc = await this.userModal.findOne({_id: userId})
+        if (userDoc) {
+            let userObject = userDoc.toObject()
+            return userObject.contacts
         }
         return null        
     }
@@ -114,6 +159,7 @@ module.exports = class UserService{
             kycStatus: kycStatus,
             role: payload.role,
             profileImg:payload.profileImg,
+            contacts: payload.contacts
         },
             process.env.JWT_SECRET,
             {expiresIn: "7d",

@@ -25,10 +25,15 @@ const {
     loginUserController,
     registerUserController,
     kycController,
+    processKYCRequestController,
     addKeyController,
-    getKeyController,
-    
+    addContactController,
+    getKeyController,    
+    getContactsController,
+    getKYCController,
+    getStripeToken
 } = require("../../controllers/auth/users");
+
 
 module.exports = (app)=> {
     app.use("/user",router)
@@ -56,6 +61,7 @@ module.exports = (app)=> {
 
     router.post("/google-login", googleController);
     router.post("/facebook-login", facebookController);
+
     router.post(
         "/kyc", getWithAuth,
         celebrate({
@@ -64,23 +70,54 @@ module.exports = (app)=> {
                     doc : Joi.string().required(),
                     number : Joi.number().required(),
                     expiry : Joi.string().required(),
-                    addressProof : Joi.string().required()
+                    addressProof : Joi.string().required(),
+                    name: Joi.string().required()
             }),
         }),
         kycController)
-
-        router.post(
-            "/add_key", getWithAuth,
-            celebrate({
+    
+    router.post(
+        "/process_kyc_request", getWithAuth,
+        celebrate({
                 body: Joi.object({
-                    keyTag : Joi.string().required(),
-                    index : Joi.number().required(),
-                    address : Joi.string().required(),
-                }),
+                    requestId : Joi.string().required(),
+                    status : Joi.string().required(),
             }),
-            addKeyController)
+        }),
+        processKYCRequestController)    
+    
+    router.post(
+        "/add_key", getWithAuth,
+        celebrate({
+            body: Joi.object({
+                keyTag : Joi.string().required(),
+                index : Joi.number().required(),
+                address : Joi.string().required(),
+            }),
+        }),
+        addKeyController)
 
-            router.get(
-                "/get_keys", getWithAuth, getKeyController)
+    router.post(
+        "/add_contact", getWithAuth,
+        celebrate({
+            body: Joi.object({
+                name : Joi.string().required(),
+                address : Joi.string().required(),
+                email: Joi.string().required(),
+            }),
+        }),
+        addContactController)
+    
+
+    router.get(
+        "/get_keys", getWithAuth, getKeyController)
+
+    router.get(
+        "/get_contacts", getWithAuth, getContactsController)
+
+    router.get(
+        "/get_kyc_requests", getWithAuth, getKYCController)
+
+    router.get('/create-checkout-session', getStripeToken);
 }
     //module.exports = router;

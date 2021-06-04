@@ -20,7 +20,6 @@ const CryptoOrderSchema = new Schema({
     },
 	cryptoTranHash:{
         type: String,
-        required: true,
     },
     cryptoType:{
         type: String,
